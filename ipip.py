@@ -1,17 +1,18 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 #coding=utf-8
 __author__ = 'caiqiqi'
 
-
 import sys
 
-from pyquery import PyQuery as pq
 
-from bs4 import BeautifulSoup
 import requests
-import lxml.html
+from lxml import html
 
 url = 'http://www.ipip.net/ip.html'
+
+xpath_basics  = "//*[@id='myself']"
+xpath_details = "//td[2]"
+#xpath_details = "/html/body/div[2]/div[4]/table[1]/tbody/tr[2]/td[2]"
 
 header = {
 'Host':"www.ipip.net",
@@ -21,15 +22,27 @@ header = {
 'Accept-Encoding':"gzip, deflate",
 'Referer':"http://www.ipip.net/",
 'Connection':"keep-alive",
-'Upgrade-Insecure-Requests':"1",
 'Content-Type':"application/x-www-form-urlencoded"
 }
 
 def parse_html_by_bs(html_str):
+    from bs4 import BeautifulSoup
     soup = BeautifulSoup(html_str, "lxml")
     return soup.find(id='myself').get_text()
 
+def parse_html_by_xpath(html_str):
+    tree = html.fromstring(html_str)
+    basics  = tree.xpath(xpath_basics)
+    details = tree.xpath(xpath_details)
+    for i in basics:
+        print i.text
+    for i in details:
+        if i.text:
+            print i.text
+
+
 def parse_html_by_pq(html_str):
+    from pyquery import PyQuery as pq
     doc = pq(html_str)
     return doc('#myself').text()
 
@@ -41,7 +54,9 @@ try:
 except IndexError as e:
     print "[!] 未输入查询IP, 直接返回当前IP"
 
-r = s.post(url, data=payload, headers=header)
-#print parse_html_by_bs(r.content)
-print parse_html_by_pq(r.content)
-s.close()
+if __name__ == '__main__':
+    r = s.post(url, data=payload, headers=header)
+    #print parse_html_by_bs(r.content)
+    parse_html_by_xpath(r.content)
+    #print parse_html_by_pq(r.content)
+    s.close()
