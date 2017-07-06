@@ -9,4 +9,4 @@ http://blog.csdn.net/tao_627/article/details/51019972
 ➜  ip_info master ✓ ./ipip.py 202.202.43.125                                                  [22:31:39]
 中国重庆 重庆邮电大学 教育网
 ```
-![](img/Screenshot_2017-07-06_上午9.48.19.png)
+![](img/Screenshot_2017-07-07_上午1.12.15.png)
