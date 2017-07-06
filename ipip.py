@@ -3,8 +3,6 @@
 __author__ = 'caiqiqi'
 
 import sys
-
-
 import requests
 from lxml import html
 
@@ -12,7 +10,7 @@ url = 'http://www.ipip.net/ip.html'
 
 xpath_basics  = "//*[@id='myself']"
 xpath_details = "//td[2]"
-#xpath_details = "/html/body/div[2]/div[4]/table[1]/tbody/tr[2]/td[2]"
+#xpath_details_2 = "/html/body/div[2]/div[3]/div[2]/div[1]"
 
 header = {
 'Host':"www.ipip.net",
@@ -26,14 +24,15 @@ header = {
 def parse_html_by_bs(html_str):
     from bs4 import BeautifulSoup
     soup = BeautifulSoup(html_str, "lxml")
-    return soup.find(id='myself').get_text()
+    print soup.find(id='myself').get_text()
 
 def parse_html_by_xpath(html_str):
     tree = html.fromstring(html_str)
     basics  = tree.xpath(xpath_basics)
     details = tree.xpath(xpath_details)
+    #details_2 = tree.xpath(xpath_details_2)
     for i in basics:
-        print i.text
+        print i.text.lstrip()
     for i in details:
         if i.text:
             print i.text
@@ -42,7 +41,11 @@ def parse_html_by_xpath(html_str):
 def parse_html_by_pq(html_str):
     from pyquery import PyQuery as pq
     doc = pq(html_str)
-    return doc('#myself').text()
+    print doc('#myself').text()
+    for i in doc('td'):
+        if i.text:
+            print i.text.strip()
+
 
 s = requests.Session()
 payload = ''
@@ -54,7 +57,7 @@ except IndexError as e:
 
 if __name__ == '__main__':
     r = s.post(url, data=payload, headers=header)
-    #print parse_html_by_bs(r.content)
+    #parse_html_by_bs(r.content)
     parse_html_by_xpath(r.content)
-    #print parse_html_by_pq(r.content)
+    #parse_html_by_pq(r.content)
     s.close()
