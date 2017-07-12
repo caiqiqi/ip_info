@@ -24,7 +24,7 @@ header = {
 def parse_html_by_bs(html_str):
     from bs4 import BeautifulSoup
     soup = BeautifulSoup(html_str, "lxml")
-    print soup.find(id='myself').get_text()
+    print soup.find(id='myself').get_text().encode("utf-8")
 
 def parse_html_by_xpath(html_str):
     tree = html.fromstring(html_str)
@@ -35,7 +35,7 @@ def parse_html_by_xpath(html_str):
         print i.text.encode("utf-8").lstrip()
     for i in details:
         if i.text:
-            print i.text
+            print i.text.encode("utf-8")
 
 
 def parse_html_by_pq(html_str):
@@ -44,7 +44,7 @@ def parse_html_by_pq(html_str):
     print doc('#myself').text()
     for i in doc('td'):
         if i.text:
-            print i.text.strip()
+            print i.text.encode("utf-8").strip()
 
 
 s = requests.Session()
@@ -53,7 +53,7 @@ payload = ''
 try:
     payload = 'ip=' + sys.argv[1]
 except IndexError as e:
-    print "[!] 未输入查询IP, 直接返回当前IP"
+    print u"[!] 未输入查询IP, 直接返回当前IP"
 
 if __name__ == '__main__':
     r = s.post(url, data=payload, headers=header)
