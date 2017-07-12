@@ -32,7 +32,7 @@ def parse_html_by_xpath(html_str):
     details = tree.xpath(xpath_details)
     #details_2 = tree.xpath(xpath_details_2)
     for i in basics:
-        print i.text.lstrip()
+        print i.text.encode("utf-8").lstrip()
     for i in details:
         if i.text:
             print i.text
